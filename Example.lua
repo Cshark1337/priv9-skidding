@@ -1,55 +1,63 @@
--- hello test
--- More advanced docs: https://github.com/0x340/Priv9-UI-Libary
-local library, notifications = loadstring(game:HttpGet("https://raw.githubusercontent.com/Cshark1337/priv9-skidding/refs/heads/main/Library.lua"))()
+local Library, Notifications, Themes = loadstring(game:HttpGet("https://raw.githubusercontent.com/i77lhm/Libraries/refs/heads/main/Bbot/Library.lua"))()
 
-local window = library:window({
-	name = "priv9",
-})
+local Window = Library:Window({name = "nebula"})
 
-notifications:create_notification({name = "loading menu..."})
-notifications:create_notification({name = "loading modules..."})
+local Tabs = {
+    Combat = Window:Tab({Name = "Combat"}),
+    Visuals = Window:Tab({Name = "Visuals"}),
+    Players = Window:Tab({Name = "Players"})
+}
 
-local rage = window:tab({name = "rage"})
-local column = rage:column({})
-local section = column:section({name = "aimbot", auto_fill = false, size = 0.3})
-local section2 = column:section({name = "target selection", auto_fill = false, size = 0.7})
-section:toggle({name = "enabled", flag = "toggle_flag"})
-section:keybind({name = "aim key"})
-section:toggle({name = "silent", flag = "toggle_flag"})
-section:slider({name = "smooth", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
+Tabs.Players:PlayerList({}) -- Tabs.Players.GetPriority(player.Name)
 
-section2:slider({name = "fov", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
-section2:slider({name = "max distance", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
-section2:toggle({name = "target npcs", flag = "toggle_flag"})
-section2:dropdown({name = "hitbox", flag = "distance_priority", items = {"head","chest","legs"}, default = "head"})
-section2:slider({name = "hs after x shots", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
+local Section = Tabs.Combat:Section({Name = "Section", Side = "Left"})
 
-local column = rage:column({})
-local section = column:section({name = "weapon modifications"})
-local section2 = column:section({name = "other"})
-section:toggle({name = "no-spread", flag = "toggle_flag"})
-section:slider({name = "recoil multiplier", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
-section:slider({name = "bullet thickness", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
-section:slider({name = "bullet speed", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
+for i = 1, 3 do
+    local Toggle = Section:Toggle({Name = "Toggle"})
+    Toggle:Colorpicker({Name = "Hello!", Flag = "This is a flag" .. i}) -- For animation pickers you need to either designate speific names or flags to differentiate animations. else itll break
+    Toggle:Keybind({Name = "hello!", Callback = function(bool) print(bool) end, ShowInList = true})
+    Section:Button({Name = "Button", Callback = function() print("I have been clicked!") end})
+end 
 
-local column = rage:column({})
-local section = column:section({name = "hax"})
-section:toggle({name = "speed hax"})
-section:slider({name = "speed multiplier", min = 0, max = 10, default = 10, interval = 0.1, suffix = "st"})
-section:slider({name = "radius", min = 0, max = 10, default = 10, interval = 0.1, suffix = "rad"})
-section:slider({name = "skidding speed", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
+Section:Slider({Name = "Slider", Callback = function(int) print(int) end})
+Section:Dropdown({Name = "Hello!", Options = {"1", "2", "3"}})
 
-local section2 = column:section({name = "other"})
-section:toggle({name = "no-spread", flag = "toggle_flag"})
-section:slider({name = "recoil multiplier", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
-section:slider({name = "bullet thickness", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
-section:slider({name = "bullet speed", min = 0, max = 10, default = 10, interval = 0.1, suffix = ""})
-section:button({name = "Test notification", callback = function()
-    notifications:create_notification({name = "NOTIFICATION TESTING"})
-end})
+local Toggle = Section:Toggle({Name = "Group", Folding = true})
+Toggle:Toggle({Name = "Toggle"})
+Toggle:Slider({Name = "Slider", Callback = function(int) print(int) end})
+Toggle:Dropdown({Name = "Hello!", Options = {"1", "2", "3"}, Multi = true})
 
-local rage = window:tab({name = "visuals"})
-local rage = window:tab({name = "misc"})
+for i = 1, 5 do 
+    Toggle = Toggle:Toggle({Name = "Group", Folding = true})
+    Toggle:Toggle({Name = "Toggle"})
+    Toggle:Slider({Name = "Slider", Callback = function(int) print(int) end})
+    Toggle:Dropdown({Name = "Hello!", Options = {"1", "2", "3"}})
+end
 
-notifications:create_notification({name = "loaded cheat"})
-library:init_config(window) 
+local Tab1, Tab2, Tab3 = Tabs.Combat:MultiSection({Tabs = {"Hi", "Hello", "Sick"}, Side = "Right", Size = 1})
+for _,tab in {Tab1, Tab2, Tab3} do 
+    tab:Toggle({Name = "Toggle"})
+    tab:Slider({Name = "Slider", Callback = function(int) print(int) end})
+    tab:Dropdown({Name = "Hello!", Options = {"1", "2", "3"}})
+
+    local Toggle = tab:Toggle({Name = "Group", Folding = true})
+    Toggle:Toggle({Name = "Toggle"})
+    Toggle:Slider({Name = "Slider", Callback = function(int) print(int) end})
+    Toggle:Dropdown({Name = "Hello!", Options = {"1", "2", "3"}})
+
+    for i = 1, 5 do 
+        Toggle = Toggle:Toggle({Name = "Group", Folding = true})
+        Toggle:Toggle({Name = "Toggle"})
+        Toggle:Slider({Name = "Slider", Callback = function(int) print(int) end})
+        Toggle:Dropdown({Name = "Hello!", Options = {"1", "2", "3"}})
+        Toggle:Textbox({Name = "Textbox", Default = "hELLO!", Callback = function(Text) print(Text) end})
+    end
+end
+
+Library:Configs(Window)
+
+for index, value in Themes.preset do 
+    pcall(function()
+        Library:RefreshTheme(index, value)
+    end)
+end
